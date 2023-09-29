@@ -1,0 +1,10 @@
+name: NarcolepsyGamesUtils
+main: games.narcolepsy.minecraft.utils.UtilsPlugin
+api-version: 1.17
+version: 0.0.1
+author: Melair
+description: "Narcolepsy Games: Utils"
+libraries:
+  - com.squareup.okhttp3:okhttp:4.10.0
+commands:
+  sit: {}
