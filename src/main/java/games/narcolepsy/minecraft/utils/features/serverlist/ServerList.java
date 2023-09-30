@@ -1,19 +1,22 @@
-package games.narcolepsy.minecraft.utils.features.hideplayersinlist;
+package games.narcolepsy.minecraft.utils.features.serverlist;
 
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
 import games.narcolepsy.minecraft.utils.features.Feature;
 import org.bukkit.Server;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.plugin.Plugin;
 
-public class HidePlayersInServerList implements Feature, Listener {
+public class ServerList implements Feature, Listener {
     private final Server server;
     private final Plugin plugin;
+    private final boolean hidePlayers;
 
-    public HidePlayersInServerList(Server server, Plugin plugin) {
+    public ServerList(Server server, Plugin plugin, boolean hidePlayers) {
         this.server = server;
         this.plugin = plugin;
+        this.hidePlayers = hidePlayers;
     }
 
     @Override
@@ -23,11 +26,18 @@ public class HidePlayersInServerList implements Feature, Listener {
 
     @Override
     public String getName() {
-        return "Hide Players In Server List";
+        return "Server List";
     }
 
     @EventHandler
     public void onPaperServerListPingEvent(PaperServerListPingEvent e) {
-        e.getPlayerSample().clear();
+        if (this.hidePlayers) {
+            e.getPlayerSample().clear();
+        }
+    }
+
+    @EventHandler
+    public void onServerListPingEvent(ServerListPingEvent e) {
+
     }
 }

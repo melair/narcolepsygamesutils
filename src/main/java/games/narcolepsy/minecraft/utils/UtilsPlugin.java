@@ -7,7 +7,7 @@ import games.narcolepsy.minecraft.utils.features.compasshud.TextHUD;
 import games.narcolepsy.minecraft.utils.features.customportals.CustomPortals;
 import games.narcolepsy.minecraft.utils.features.disableendermangriefing.DisableEndermanGriefing;
 import games.narcolepsy.minecraft.utils.features.discord.Discord;
-import games.narcolepsy.minecraft.utils.features.hideplayersinlist.HidePlayersInServerList;
+import games.narcolepsy.minecraft.utils.features.serverlist.ServerList;
 import games.narcolepsy.minecraft.utils.features.launchcontrol.LaunchControl;
 import games.narcolepsy.minecraft.utils.features.nodefaultpermissions.NoDefaultPermissions;
 import games.narcolepsy.minecraft.utils.features.placelightingonleaves.PlaceLightingOnLeaves;
@@ -90,8 +90,10 @@ public final class UtilsPlugin extends JavaPlugin {
             addFeature(new CustomPortals(this, this.getServer()));
         }
 
-        if (cfg.getBoolean("features.hide-players-in-server-list", true)) {
-            addFeature(new HidePlayersInServerList(this.getServer(), this));
+        if (cfg.isConfigurationSection("features.server-list")) {
+            ConfigurationSection slCfg = cfg.getConfigurationSection("features.server-list");
+            boolean hidePlayers = slCfg.getBoolean("hide-players", true);
+            addFeature(new ServerList(this.getServer(), this, hidePlayers));
         }
 
         if (cfg.getBoolean("features.place-lighting-on-leaves", true)) {

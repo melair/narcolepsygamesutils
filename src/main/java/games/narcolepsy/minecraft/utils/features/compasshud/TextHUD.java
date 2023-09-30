@@ -10,6 +10,8 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftMetaCompass;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -196,7 +198,7 @@ public class TextHUD implements Feature, Listener {
     private Component addDirectionArrow(Player p, Location l, NamedTextColor c) {
         Component bar = Component.empty();
 
-        if (!p.getWorld().equals(l.getWorld())) {
+        if (p.getWorld().getEnvironment() != World.Environment.NORMAL) {
             bar = bar.append(Component.text("?", c).decorate(TextDecoration.OBFUSCATED));
         } else {
             Vector cv = l.toVector();
