@@ -1,5 +1,6 @@
 package games.narcolepsy.minecraft.utils.features.playerlist;
 
+import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import games.narcolepsy.minecraft.utils.features.Feature;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -9,13 +10,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
-public class PlayerList implements Feature, Listener {
-    private final Plugin plugin;
-    private final Server server;
+public class PlayerList extends BaseFeature implements Listener {
 
-    public PlayerList(Plugin plugin, Server server) {
-        this.plugin = plugin;
-        this.server = server;
+
+    public PlayerList(Plugin plugin) {
+        super(plugin);
     }
 
     @Override

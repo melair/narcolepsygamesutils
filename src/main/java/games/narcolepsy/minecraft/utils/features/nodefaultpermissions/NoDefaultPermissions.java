@@ -1,5 +1,6 @@
 package games.narcolepsy.minecraft.utils.features.nodefaultpermissions;
 
+import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import games.narcolepsy.minecraft.utils.features.Feature;
 import org.bukkit.Server;
 import org.bukkit.permissions.Permission;
@@ -10,15 +11,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class NoDefaultPermissions implements Feature {
-    private final Plugin plugin;
-    private final Server server;
-    private final Logger logger;
+public class NoDefaultPermissions extends BaseFeature implements Feature {
 
-    public NoDefaultPermissions(Plugin plugin, Server server, Logger logger) {
-        this.plugin = plugin;
-        this.server = server;
-        this.logger = logger;
+    public NoDefaultPermissions(Plugin plugin) {
+        super(plugin);
     }
 
     @Override

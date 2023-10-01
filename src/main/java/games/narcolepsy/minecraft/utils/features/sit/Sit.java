@@ -1,6 +1,7 @@
 package games.narcolepsy.minecraft.utils.features.sit;
 
 import games.narcolepsy.minecraft.utils.BlockReference;
+import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import games.narcolepsy.minecraft.utils.features.Feature;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,6 +28,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,19 +38,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Sit implements Feature, Listener, @Nullable CommandExecutor {
-    private final JavaPlugin plugin;
-    private final Server server;
-
-    public Sit(JavaPlugin plugin, Server server) {
-        this.plugin = plugin;
-        this.server = server;
+public class Sit extends BaseFeature implements Listener, @Nullable CommandExecutor {
+    private final JavaPlugin javaPlugin;
+    public Sit(JavaPlugin plugin) {
+        super(plugin);
+        this.javaPlugin = plugin;
     }
 
     @Override
     public void Enable() {
-        server.getPluginManager().registerEvents(this, plugin);
-        plugin.getCommand("sit").setExecutor(this);
+        this.server.getPluginManager().registerEvents(this, plugin);
+        javaPlugin.getCommand("sit").setExecutor(this);
     }
 
     @Override

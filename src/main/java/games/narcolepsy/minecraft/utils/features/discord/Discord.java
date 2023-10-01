@@ -1,5 +1,6 @@
 package games.narcolepsy.minecraft.utils.features.discord;
 
+import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import games.narcolepsy.minecraft.utils.features.Feature;
 import games.narcolepsy.minecraft.utils.features.discord.events.PlayerAdvancement;
 import games.narcolepsy.minecraft.utils.features.discord.events.PlayerDeath;
@@ -14,19 +15,14 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Discord implements Feature {
-    private final Plugin plugin;
-    private final Server server;
-    private final Logger logger;
+public class Discord extends BaseFeature {
     private final Set<String> messages;
     private Manager manager = null;
     private Thread thread = null;
     private ServerStartStop serverStartStop = null;
 
-    public Discord(Plugin plugin, Server server, Logger logger, List<String> messages) {
-        this.plugin = plugin;
-        this.server = server;
-        this.logger = logger;
+    public Discord(Plugin plugin, List<String> messages) {
+        super(plugin);
         this.messages = new HashSet<>(messages);
     }
 

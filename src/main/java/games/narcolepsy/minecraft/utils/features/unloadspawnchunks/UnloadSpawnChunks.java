@@ -1,5 +1,6 @@
 package games.narcolepsy.minecraft.utils.features.unloadspawnchunks;
 
+import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import games.narcolepsy.minecraft.utils.features.Feature;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -7,20 +8,17 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.logging.Logger;
 
-public class UnloadSpawnChunks implements Feature {
-    private final Server server;
-    private final Logger l;
+public class UnloadSpawnChunks extends BaseFeature {
 
-    public UnloadSpawnChunks(Server server, Logger l) {
-        this.server = server;
-        this.l = l;
+    public UnloadSpawnChunks(Plugin plugin) {
+        super(plugin);
     }
 
     @Override
     public void Enable() {
-        l.info("Clearing Keep Spawn In Memory:");
+        this.logger.info("Clearing Keep Spawn In Memory:");
         for (World w : server.getWorlds()) {
-            l.info("- " + w.getName());
+            this.logger.info("- " + w.getName());
             w.setKeepSpawnInMemory(false);
         }
     }

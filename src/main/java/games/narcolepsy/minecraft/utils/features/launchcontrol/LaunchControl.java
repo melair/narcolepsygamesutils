@@ -1,5 +1,6 @@
 package games.narcolepsy.minecraft.utils.features.launchcontrol;
 
+import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import games.narcolepsy.minecraft.utils.features.Feature;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
@@ -15,18 +16,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.logging.Logger;
 
-public class LaunchControl implements Feature, Runnable, Listener {
-    private final Plugin plugin;
-    private final Server server;
-    private final Logger logger;
+public class LaunchControl extends BaseFeature implements Runnable, Listener {
     private final LocalDateTime launchAt;
     private final BossBar bar;
     private boolean hasLaunched;
 
-    public LaunchControl(Plugin plugin, Server server, Logger logger, LocalDateTime launchAt) {
-        this.plugin = plugin;
-        this.server = server;
-        this.logger = logger;
+    public LaunchControl(Plugin plugin, LocalDateTime launchAt) {
+        super(plugin);
         this.launchAt = launchAt;
         this.hasLaunched = this.launchAt.isBefore(LocalDateTime.now());
 

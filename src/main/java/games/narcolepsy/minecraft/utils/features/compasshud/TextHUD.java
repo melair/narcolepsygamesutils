@@ -1,5 +1,6 @@
 package games.narcolepsy.minecraft.utils.features.compasshud;
 
+import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import games.narcolepsy.minecraft.utils.features.Feature;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -37,19 +38,17 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 
-public class TextHUD implements Feature, Listener {
+public class TextHUD extends BaseFeature implements Listener {
     private static final int UPDATE_INTERVAL = 3;
     private static final int SAVE_INTERVAL = 3 * 60 * 20;
-    private final Plugin plugin;
-    private final Server server;
+
     private final Set<UUID> hudPlayer = new HashSet<>();
     private final Map<UUID, Boolean> compassPlayer = new HashMap<>();
     private final Map<UUID, Boolean> clockPlayer = new HashMap<>();
     private File settingsFile;
 
-    public TextHUD(Plugin plugin, Server server) {
-        this.plugin = plugin;
-        this.server = server;
+    public TextHUD(Plugin plugin) {
+        super(plugin);
     }
 
     @Override

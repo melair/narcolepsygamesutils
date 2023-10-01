@@ -1,5 +1,6 @@
 package games.narcolepsy.minecraft.utils.features.customportals;
 
+import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import games.narcolepsy.minecraft.utils.features.Feature;
 import org.bukkit.Axis;
 import org.bukkit.Location;
@@ -23,19 +24,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-public class CustomPortals implements Feature, Listener {
+public class CustomPortals extends BaseFeature implements Listener {
     private final String worldOverworldA = "world";
     private final String worldOverworldB = "world_two";
     private final String worldNether = "world_nether";
     private final Material portalMaterial = Material.OXIDIZED_COPPER;
-    private final Plugin plugin;
-    private final Server server;
 
     private Material nextCreateMaterial = Material.OBSIDIAN;
 
-    public CustomPortals(Plugin plugin, Server server) {
-        this.plugin = plugin;
-        this.server = server;
+    public CustomPortals(Plugin plugin) {
+        super(plugin);
     }
 
     @Override

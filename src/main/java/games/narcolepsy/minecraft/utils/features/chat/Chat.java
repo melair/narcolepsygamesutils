@@ -1,5 +1,6 @@
 package games.narcolepsy.minecraft.utils.features.chat;
 
+import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import games.narcolepsy.minecraft.utils.features.Feature;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
@@ -12,13 +13,9 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
-public class Chat implements Feature, Listener {
-    private final Plugin plugin;
-    private final Server server;
-
-    public Chat(Plugin plugin, Server server) {
-        this.plugin = plugin;
-        this.server = server;
+public class Chat extends BaseFeature implements Listener {
+    public Chat(Plugin plugin) {
+        super(plugin);
     }
 
     @Override

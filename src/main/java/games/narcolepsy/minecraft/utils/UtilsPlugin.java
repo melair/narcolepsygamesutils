@@ -7,6 +7,7 @@ import games.narcolepsy.minecraft.utils.features.compasshud.TextHUD;
 import games.narcolepsy.minecraft.utils.features.customportals.CustomPortals;
 import games.narcolepsy.minecraft.utils.features.disableendermangriefing.DisableEndermanGriefing;
 import games.narcolepsy.minecraft.utils.features.discord.Discord;
+import games.narcolepsy.minecraft.utils.features.reownonname.ReownOnName;
 import games.narcolepsy.minecraft.utils.features.serverlist.ServerList;
 import games.narcolepsy.minecraft.utils.features.launchcontrol.LaunchControl;
 import games.narcolepsy.minecraft.utils.features.nodefaultpermissions.NoDefaultPermissions;
@@ -39,7 +40,11 @@ public final class UtilsPlugin extends JavaPlugin {
         ConfigurationSection cfg = getConfig();
 
         if (cfg.getBoolean("features.no-default-permissions", false)) {
-            addFeature(new NoDefaultPermissions(this, this.getServer(), l));
+            addFeature(new NoDefaultPermissions(this));
+        }
+
+        if (cfg.getBoolean("features.reown-on-name", true)) {
+            addFeature(new ReownOnName(this));
         }
 
         if (cfg.isConfigurationSection("features.launch-control")) {
@@ -54,32 +59,31 @@ public final class UtilsPlugin extends JavaPlugin {
 
                 LocalDateTime launchAt = LocalDateTime.of(year, month, day, hour, minute);
 
-                addFeature(new LaunchControl(this, this.getServer(), l, launchAt));
+                addFeature(new LaunchControl(this, launchAt));
             }
         }
 
         if (cfg.getBoolean("features.unload-spawn-chunks", false)) {
-            addFeature(new UnloadSpawnChunks(this.getServer(), l));
+            addFeature(new UnloadSpawnChunks(this));
         }
 
         if (cfg.isConfigurationSection("features.auto-restart")) {
             ConfigurationSection lcCfg = cfg.getConfigurationSection("features.auto-restart");
 
             if (lcCfg.getBoolean("enabled", false)) {
-                int restartAfter = lcCfg.getInt("restart-after", 3 * 3600);
-                int forceRestartAfter = lcCfg.getInt("force-restart-after", 4 * 3600);
-                int idleTime = lcCfg.getInt("idle-time", 300);
+                int restartAfter = lcCfg.getInt("restart-after", 4 * 3600);
+                int forceRestartAfter = lcCfg.getInt("eager-time", 3600);
 
-                addFeature(new AutoRestart(this, this.getServer(), restartAfter, forceRestartAfter, idleTime));
+                addFeature(new AutoRestart(this, restartAfter, forceRestartAfter));
             }
         }
 
         if (cfg.getBoolean("features.sit", true)) {
-            addFeature(new Sit(this, this.getServer()));
+            addFeature(new Sit(this));
         }
 
         if (cfg.getBoolean("features.compasshud", true)) {
-            addFeature(new TextHUD(this, this.getServer()));
+            addFeature(new TextHUD(this));
         }
 
         if (cfg.getBoolean("features.playerhead", true)) {
@@ -87,36 +91,36 @@ public final class UtilsPlugin extends JavaPlugin {
         }
 
         if (cfg.getBoolean("features.custom-portals", true)) {
-            addFeature(new CustomPortals(this, this.getServer()));
+            addFeature(new CustomPortals(this));
         }
 
         if (cfg.isConfigurationSection("features.server-list")) {
             ConfigurationSection slCfg = cfg.getConfigurationSection("features.server-list");
             boolean hidePlayers = slCfg.getBoolean("hide-players", true);
-            addFeature(new ServerList(this.getServer(), this, hidePlayers));
+            addFeature(new ServerList(this, hidePlayers));
         }
 
         if (cfg.getBoolean("features.place-lighting-on-leaves", true)) {
-            addFeature(new PlaceLightingOnLeaves(this, this.getServer()));
+            addFeature(new PlaceLightingOnLeaves(this));
         }
 
         if (cfg.isConfigurationSection("features.discord")) {
             ConfigurationSection dCfg = cfg.getConfigurationSection("features.discord");
             assert dCfg != null;
             List<String> messages = dCfg.getStringList("message-types");
-            addFeature(new Discord(this, this.getServer(), this.getLogger(), messages));
+            addFeature(new Discord(this, messages));
         }
 
         if (cfg.getBoolean("features.chat", true)) {
-            addFeature(new Chat(this, this.getServer()));
+            addFeature(new Chat(this));
         }
 
         if (cfg.getBoolean("features.serverlist", true)) {
-            addFeature(new PlayerList(this, this.getServer()));
+            addFeature(new PlayerList(this));
         }
 
         if (cfg.getBoolean("features.disableendermangriefing", true)) {
-            addFeature(new DisableEndermanGriefing(this.getServer(), this));
+            addFeature(new DisableEndermanGriefing(this));
         }
 
         for (Feature f : features) {

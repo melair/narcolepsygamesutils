@@ -1,36 +1,38 @@
 package games.narcolepsy.minecraft.utils.features.autorestart;
 
+import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import games.narcolepsy.minecraft.utils.features.Feature;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
-import org.bukkit.block.Block;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.time.Instant;
 
-public class AutoRestart implements Feature, Runnable, Listener {
-    private final Plugin plugin;
-    private final Server server;
+public class AutoRestart extends BaseFeature implements Runnable, Listener {
+    private final BossBar bossBar;
     private final long restartAfter;
-    private final long forceRestartAfter;
-    private final long idleTime;
+    private final long eagerTime;
     private final long startTime;
-    private long lastLeaveTime;
-    private boolean shutdownStarted;
-    private int shutdownTimer = 30;
+    private long remainingTime;
 
-    public AutoRestart(Plugin plugin, Server server, long restartAfter, long forceRestartAfter, long idleTime) {
-        this.plugin = plugin;
-        this.server = server;
+
+    public AutoRestart(Plugin plugin, long restartAfter, long eagerTime) {
+        super(plugin);
+
         this.restartAfter = restartAfter;
-        this.forceRestartAfter = forceRestartAfter;
-        this.idleTime = idleTime;
+        this.eagerTime = eagerTime;
         this.startTime = getCurrentTime();
-        this.shutdownStarted = false;
+        this.remainingTime = this.startTime + this.restartAfter + this.eagerTime;
+
+        this.bossBar = server.createBossBar("Server Restart", BarColor.BLUE, BarStyle.SEGMENTED_12);
     }
 
     @Override
@@ -38,7 +40,7 @@ public class AutoRestart implements Feature, Runnable, Listener {
         server.getScheduler().runTaskTimer(plugin, this, 20, 20);
         server.getPluginManager().registerEvents(this, plugin);
 
-        plugin.getLogger().info("Auto Restart after " + this.restartAfter + " and idle time of " + this.idleTime + ".");
+        plugin.getLogger().info("Auto Restart after " + this.restartAfter + " and eager time of " + this.eagerTime + ".");
     }
 
     @Override
@@ -48,53 +50,42 @@ public class AutoRestart implements Feature, Runnable, Listener {
 
     @Override
     public void run() {
-        if (this.shutdownStarted) {
-            handleShutdown();
-            return;
+        this.remainingTime = this.restartAfter - (this.getCurrentTime() - this.startTime);
+
+        if (this.remainingTime == this.eagerTime) {
+            for (var p : this.server.getOnlinePlayers()) {
+                this.bossBar.addPlayer(p);
+            }
+
+            server.broadcast(prefix(Component.text("Server will restart next time it is empty or in an another ").color(NamedTextColor.RED).append(Component.text(this.eagerTime).color(NamedTextColor.GOLD).append(Component.text(" seconds...").color(NamedTextColor.RED)))));
+        } else if (this.remainingTime < this.eagerTime) {
+            if (server.getOnlinePlayers().size() == 0) {
+                plugin.getLogger().warning("Restarting due to length of time server has run.");
+                server.shutdown();
+                return;
+            }
+
+            this.bossBar.setProgress(Math.min(1.0, 1.0 - (this.remainingTime / (this.eagerTime * 1.0))));
+
+            if (this.remainingTime <= this.eagerTime) {
+                if (this.remainingTime < 10 || this.remainingTime % 5 == 0) {
+                    server.broadcast(prefix(Component.text("Server restarting in ").color(NamedTextColor.RED).append(Component.text(this.remainingTime).color(NamedTextColor.GOLD).append(Component.text(" seconds...").color(NamedTextColor.RED)))));
+                }
+            }
+
+            if (this.remainingTime <= 0) {
+                for (var p : this.server.getOnlinePlayers()) {
+                    p.kick(Component.text("Server restarting..."));
+                }
+            }
         }
-
-        long currentTime = getCurrentTime();
-        long forceShutdown = startTime + forceRestartAfter;
-
-        if (currentTime >= forceShutdown) {
-            this.shutdownStarted = true;
-            return;
-        }
-
-        if (server.getOnlinePlayers().size() > 0) {
-            return;
-        }
-
-        long wantShutdown = startTime + restartAfter;
-
-        if (currentTime < wantShutdown) {
-            return;
-        }
-
-        long idleTime = this.lastLeaveTime + this.idleTime;
-
-        if (currentTime >= idleTime) {
-            this.shutdownStarted = true;
-        }
-    }
-
-    private void handleShutdown() {
-        if (server.getOnlinePlayers().size() == 0 || this.shutdownTimer == 0) {
-            plugin.getLogger().warning("Restarting due to length of time server has run.");
-            server.shutdown();
-            return;
-        }
-
-        if (this.shutdownTimer % 5 == 0 || this.shutdownTimer < 5) {
-            server.broadcast(Component.text("Server restarting in ").color(NamedTextColor.RED).append(Component.text(this.shutdownTimer).color(NamedTextColor.GOLD).append(Component.text(" seconds...").color(NamedTextColor.RED))));
-        }
-
-        shutdownTimer--;
     }
 
     @EventHandler
-    public void onPlayerQuitEvent(PlayerQuitEvent pqe) {
-        lastLeaveTime = getCurrentTime();
+    public void onPlayerJoinEvent(PlayerJoinEvent e) {
+        if (this.remainingTime < this.eagerTime) {
+            this.bossBar.addPlayer(e.getPlayer());
+        }
     }
 
     private long getCurrentTime() {
