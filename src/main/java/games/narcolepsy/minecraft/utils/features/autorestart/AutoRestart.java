@@ -4,6 +4,7 @@ import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import games.narcolepsy.minecraft.utils.features.Feature;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -56,9 +57,9 @@ public class AutoRestart extends BaseFeature implements Runnable, Listener {
             for (var p : this.server.getOnlinePlayers()) {
                 this.bossBar.addPlayer(p);
             }
-
-            server.broadcast(prefix(Component.text("Server will restart next time it is empty or in an another ").color(NamedTextColor.RED).append(Component.text(this.eagerTime).color(NamedTextColor.GOLD).append(Component.text(" seconds...").color(NamedTextColor.RED)))));
         } else if (this.remainingTime < this.eagerTime) {
+            this.bossBar.setTitle("Server Restart - " + PlainTextComponentSerializer.plainText().serialize(remainingText(remainingTime, NamedTextColor.WHITE)));
+
             if (server.getOnlinePlayers().size() == 0) {
                 plugin.getLogger().warning("Restarting due to length of time server has run.");
                 server.shutdown();
@@ -68,8 +69,8 @@ public class AutoRestart extends BaseFeature implements Runnable, Listener {
             this.bossBar.setProgress(Math.min(1.0, 1.0 - (this.remainingTime / (this.eagerTime * 1.0))));
 
             if (this.remainingTime <= this.eagerTime) {
-                if (this.remainingTime < 10 || this.remainingTime % 5 == 0) {
-                    server.broadcast(prefix(Component.text("Server restarting in ").color(NamedTextColor.RED).append(Component.text(this.remainingTime).color(NamedTextColor.GOLD).append(Component.text(" seconds...").color(NamedTextColor.RED)))));
+                if (showWarning(this.remainingTime)) {
+                    server.broadcast(prefix(Component.text("Server restarting in: ").color(NamedTextColor.RED).append(remainingText(this.remainingTime, NamedTextColor.GOLD))));
                 }
             }
 
@@ -79,6 +80,20 @@ public class AutoRestart extends BaseFeature implements Runnable, Listener {
                 }
             }
         }
+    }
+
+    private boolean showWarning(long remaining) {
+        return remaining <= 15;
+    }
+
+    private Component remainingText(long remainingTime, NamedTextColor c) {
+        long hours = remainingTime / 3600;
+        remainingTime -= (hours * 3600);
+        long minutes = remainingTime / 60;
+        remainingTime -= (minutes * 60);
+        long seconds = remainingTime;
+
+        return Component.text(String.format("%02d:%02d:%02d", hours, minutes, seconds)).color(c);
     }
 
     @EventHandler

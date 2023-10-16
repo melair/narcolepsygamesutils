@@ -6,5 +6,7 @@ author: Melair
 description: "Narcolepsy Games: Utils"
 libraries:
   - com.squareup.okhttp3:okhttp:4.10.0
+  - io.undertow:undertow-core:2.3.8.Final
 commands:
   sit: {}
+  mapurl: {}
