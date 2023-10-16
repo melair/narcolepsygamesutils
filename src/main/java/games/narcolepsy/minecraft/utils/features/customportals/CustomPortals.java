@@ -1,11 +1,9 @@
 package games.narcolepsy.minecraft.utils.features.customportals;
 
 import games.narcolepsy.minecraft.utils.features.BaseFeature;
-import games.narcolepsy.minecraft.utils.features.Feature;
 import org.bukkit.Axis;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -22,7 +20,6 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Logger;
 
 public class CustomPortals extends BaseFeature implements Listener {
     private final String worldOverworldA = "world";
@@ -38,7 +35,7 @@ public class CustomPortals extends BaseFeature implements Listener {
 
     @Override
     public void Enable() {
-        server.getPluginManager().registerEvents(this, this.plugin);
+        super.Enable();
 
         WorldCreator wc = WorldCreator.name(worldOverworldB);
         wc.seed(1855196926162235186L);

@@ -1,18 +1,14 @@
 package games.narcolepsy.minecraft.utils.features.boatnames;
 
-import ca.spottedleaf.dataconverter.types.nbt.NBTListType;
 import games.narcolepsy.minecraft.utils.features.BaseFeature;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -22,11 +18,6 @@ import java.util.Collections;
 public class BoatNames extends BaseFeature implements Listener {
     public BoatNames(Plugin plugin) {
         super(plugin);
-    }
-
-    @Override
-    public void Enable() {
-        this.server.getPluginManager().registerEvents(this, this.plugin);
     }
 
     @Override

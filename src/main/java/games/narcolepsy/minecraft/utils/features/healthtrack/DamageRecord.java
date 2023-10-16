@@ -14,28 +14,40 @@ import java.util.UUID;
  * Record of damage, designed to be serialised for JSON to website.
  */
 public class DamageRecord {
-    /** Time damage was taken. */
+    /**
+     * Time damage was taken.
+     */
     private final long time;
-    /** Damage cause. */
+    /**
+     * Damage cause.
+     */
     private final EntityDamageEvent.DamageCause damageCause;
-    /** Amount of damage. */
+    /**
+     * Amount of damage.
+     */
     private double damageAmount;
 
-    /** Entity type which did the damage. */
+    /**
+     * Entity type which did the damage.
+     */
     private final EntityType entityType;
-    /** Name of entity which did the damage. */
+    /**
+     * Name of entity which did the damage.
+     */
     private final String entityName;
-    /** UUID of entity which did damage. */
+    /**
+     * UUID of entity which did damage.
+     */
     private final UUID entityUUID;
 
     /**
      * Construct new damage record.
      *
-     * @param damageCause cause of damage
+     * @param damageCause  cause of damage
      * @param damageAmount amount of damage
-     * @param entityType type of entity
-     * @param entityName name of entity
-     * @param entityUUID UUID of entity
+     * @param entityType   type of entity
+     * @param entityName   name of entity
+     * @param entityUUID   UUID of entity
      */
     public DamageRecord(EntityDamageEvent.DamageCause damageCause, double damageAmount, EntityType entityType, String entityName, UUID entityUUID) {
         this.time = System.currentTimeMillis();

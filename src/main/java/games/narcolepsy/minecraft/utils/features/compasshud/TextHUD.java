@@ -1,18 +1,14 @@
 package games.narcolepsy.minecraft.utils.features.compasshud;
 
 import games.narcolepsy.minecraft.utils.features.BaseFeature;
-import games.narcolepsy.minecraft.utils.features.Feature;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftMetaCompass;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +17,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
@@ -53,7 +48,8 @@ public class TextHUD extends BaseFeature implements Listener {
 
     @Override
     public void Enable() {
-        this.server.getPluginManager().registerEvents(this, this.plugin);
+        super.Enable();
+
         this.server.getScheduler().runTaskTimer(this.plugin, this::updateHUDs, UPDATE_INTERVAL, UPDATE_INTERVAL);
         this.server.getScheduler().runTaskTimer(this.plugin, this::saveSettings, SAVE_INTERVAL, SAVE_INTERVAL);
 

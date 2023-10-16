@@ -1,18 +1,179 @@
 features:
-  no-default-permissions: true
+  # No Default Permissions
+  #
+  # Some plugs decide to create permissions which are automatically assigned to normal players,
+  # this feature disables the automatic assignment of permissions, including default bukkit permissions.
+  #
+  # All permissions will have to be granted by a permission plugin.
+  no-default-permissions:
+    enabled: false
+
+  # Reown On Name
+  #
+  # Allows transfer of ownership of tamable animals (such as horses or dogs) by a new owner naming them with a Name Tag.
+  reown-on-name:
+    enabled: false
+
+  # Map URL
+  #
+  # Adds the `/mapurl` command which enables players to create custom maps based on the URL of an image provided. No
+  # check for an empty map in the inventory is done.
+  mapurl:
+    enabled: false
+
+  # Health Track
+  #
+  # Track (at least) the last 10 hearts of damage that a player receives, if the player dies summarise the that
+  # information in a hover over of the death message. Allowing you to identify what caused a players death.
+  health-track:
+    enabled: false
+
+  # Villager Heal
+  #
+  # Villagers will gain a heart of health every time they sleep - helps keep the daily wear and tear of villagers in check.
+  villager-heal:
+    enabled: false
+
+  # Unload Spawn Chunks
+  #
+  # Ensure that all chunks are unloaded when the server starts, this will break players farms who expect the chunks to
+  # be loaded at all times.
+  unload-spawn-chunks:
+    enabled: false
+
+  # Sit
+  #
+  # Enables players to sit on any stair (by right clicking) or anywhere with `/sit`.
+  sit:
+    enabled: false
+
+  # Text HUD
+  #
+  # Players can consume a clock and/or compass and see their current coordinates, direction to spawn arrow and time
+  # just above their inventory bar.
+  texthud:
+    enabled: false
+
+  # Player Head
+  #
+  # Causes a players head to be dropped if they were killed by another player.
+  player-head:
+    enabled: false
+
+  # Custom Portals
+  #
+  # Creates copper portals to an alternative world, useful for when Minecraft terrain generation changes.
+  custom-portals:
+    enabled: false
+
+  # Place Lighting on Leaves
+  #
+  # Place candles, torches, lanterns on, under and to the side of leaf blocks. Primarily used around winter holidays
+  # to decorate trees.
+  place-lighting-on-leaves:
+    enabled: false
+
+  # Boat Names
+  #
+  # Allow naming of boats with name tags, especially useful for chest boats when adventuring.
+  boat-names:
+    enabled: false
+
+  # Chat
+  #
+  # Modernise the style of chat.
+  chat:
+    enabled: false
+
+  # Player List
+  #
+  # Add Narcolepsy Games branding to player list.
+  player-list:
+    enabled: false
+
+  # Disable Enderman Griefing
+  #
+  # Does what it says on the tin - Endermen will no longer place random blocks.
+  disable-enderman-griefing:
+    enabled: false
+
+  # Map POI Server
+  #
+  # Expose two endpoints for player locations and heads for use with Bluemap. URLs must be proxied before Bluemap receives
+  # them.
+  # - /maps/[a-zA-z0-9]+/live/players.json
+  # - /maps/[a-zA-z0-9]+/live/assets/playerheads/[0-9a-f-]*.png
+  map-poi-server:
+    enabled: false
+    port: 8080
+    bindAddress: localhost
+
+  # Launch Control
+  #
+  # Used for hyping server launches, players can log on to a one chunk area in adventure mode with minimal interactivity.
+  #
+  # Server automatically launches with a small countdown at the time provided, runs against the timezone configured on
+  # the server its being run on.
   launch-control:
     enabled: false
     launch-at:
-      year: 2021
-      month: 9
-      day: 14
-      hour: 20
+      year: 2023
+      month: 08
+      day: 29
+      hour: 12
       minute: 00
-  unload-spawn-chunks: true
+
+  # Auto Restart
+  #
+  # Automatically restart the server with a small countdown in the last five minutes, server will automatically restart
+  # in the `eager-time` period if there is no one online.
   auto-restart:
     enabled: false
-    restart-after: 21600
-    idle-time: 300
-  sit: true
-  custom-portals: false
-  chat: true
+    restart-after: 14000
+    eager-time: 3600
+
+  # Server List
+  #
+  # Options to modify the server list as presented to the network browser, such as removing the player list.
+  server-list:
+    enabled: false
+    hide-players: true
+
+  # Discord
+  #
+  # Simple one way Discord integration via a Discord webhook.
+  discord:
+    enabled: false
+    # Types of message that will be sent to discord, `start-stop` may be anoying if the `auto-restart` feature is used.
+    message-types:
+      - start-stop
+      - player-session
+      - player-death
+      - player-advancement
+
+  # Better Beacons
+  #
+  # Change the behaviour of beacons range calculations to make them feel more rewarding, and justify the larger journey
+  # and adventure of obtaining them.
+  #
+  # Range is calculated by the value of each block used to build the pyramid, in value order:
+  # - iron
+  # - golds
+  # - emerald
+  # - diamond
+  # - netherite
+  better-beacons:
+    enabled: false
+    # The distance each block of a particular type extends the beacon range by.
+    values:
+      iron: 0.5
+      gold: 0.75
+      emerald: 1.25
+      diamond: 1.75
+      netherite: 2.5
+    # Ensure that the new range is never less than the vanilla equivalent - without this some teir 1 and 2 materials
+    # actually produce lower ranges.
+    respect-vanilla-minimums: true
+    # Beacon effects will not work unless the beacon is loaded in a chunk, this option limits the beacon range to
+    # prevent confusion where the player may expect the beacon to reach, but its far enough away it's actually unloaded.
+    limit-to-view-distance: true

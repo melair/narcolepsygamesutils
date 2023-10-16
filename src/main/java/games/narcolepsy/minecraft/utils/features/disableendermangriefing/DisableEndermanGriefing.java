@@ -1,8 +1,6 @@
 package games.narcolepsy.minecraft.utils.features.disableendermangriefing;
 
 import games.narcolepsy.minecraft.utils.features.BaseFeature;
-import games.narcolepsy.minecraft.utils.features.Feature;
-import org.bukkit.Server;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,11 +12,6 @@ public class DisableEndermanGriefing extends BaseFeature implements Listener {
 
     public DisableEndermanGriefing(Plugin plugin) {
         super(plugin);
-    }
-
-    @Override
-    public void Enable() {
-        server.getPluginManager().registerEvents(this, this.plugin);
     }
 
     @Override

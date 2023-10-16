@@ -1,8 +1,14 @@
 package games.narcolepsy.minecraft.utils.features.launchcontrol;
 
 import games.narcolepsy.minecraft.utils.features.BaseFeature;
-import games.narcolepsy.minecraft.utils.features.Feature;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Difficulty;
+import org.bukkit.GameMode;
+import org.bukkit.GameRule;
+import org.bukkit.Instrument;
+import org.bukkit.Note;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -14,7 +20,6 @@ import org.bukkit.plugin.Plugin;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.logging.Logger;
 
 public class LaunchControl extends BaseFeature implements Runnable, Listener {
     private final LocalDateTime launchAt;
@@ -58,7 +63,7 @@ public class LaunchControl extends BaseFeature implements Runnable, Listener {
     @Override
     public void Enable() {
         this.server.getScheduler().runTaskTimer(this.plugin, this, 20, 20);
-        this.server.getPluginManager().registerEvents(this, this.plugin);
+        super.Enable();
     }
 
     @Override

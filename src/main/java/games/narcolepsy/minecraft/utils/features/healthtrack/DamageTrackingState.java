@@ -21,7 +21,9 @@ import java.util.UUID;
  * Track a users damage.
  */
 public class DamageTrackingState {
-    /** History of users damage. */
+    /**
+     * History of users damage.
+     */
     private List<DamageRecord> damageHistory = new ArrayList<>();
 
     public DamageTrackingState(double initialDamage) {

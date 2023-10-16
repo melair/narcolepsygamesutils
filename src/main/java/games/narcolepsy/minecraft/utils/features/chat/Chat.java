@@ -1,11 +1,9 @@
 package games.narcolepsy.minecraft.utils.features.chat;
 
 import games.narcolepsy.minecraft.utils.features.BaseFeature;
-import games.narcolepsy.minecraft.utils.features.Feature;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Server;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -16,11 +14,6 @@ import org.bukkit.plugin.Plugin;
 public class Chat extends BaseFeature implements Listener {
     public Chat(Plugin plugin) {
         super(plugin);
-    }
-
-    @Override
-    public void Enable() {
-        this.server.getPluginManager().registerEvents(this, this.plugin);
     }
 
     @Override

@@ -3,8 +3,6 @@ package games.narcolepsy.minecraft.utils.features.villagerheal;
 import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Pose;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -15,11 +13,6 @@ import org.bukkit.plugin.Plugin;
 public class VillagerHeal extends BaseFeature implements Listener {
     public VillagerHeal(Plugin plugin) {
         super(plugin);
-    }
-
-    @Override
-    public void Enable() {
-        this.server.getPluginManager().registerEvents(this, this.plugin);
     }
 
     @Override

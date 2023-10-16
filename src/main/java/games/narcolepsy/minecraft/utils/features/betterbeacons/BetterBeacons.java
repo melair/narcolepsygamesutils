@@ -30,11 +30,6 @@ public class BetterBeacons extends BaseFeature implements Listener {
     }
 
     @Override
-    public void Enable() {
-        this.server.getPluginManager().registerEvents(this, this.plugin);
-    }
-
-    @Override
     public String getName() {
         return "Better Beacons";
     }
@@ -55,7 +50,7 @@ public class BetterBeacons extends BaseFeature implements Listener {
 
             int y = l.getBlockY() - 1 - t;
             for (int x = l.getBlockX() - r; x <= l.getBlockX() + r; x++) {
-                for (int z = l.getBlockZ() - r; z <= l.getBlockX() + r; z++) {
+                for (int z = l.getBlockZ() - r; z <= l.getBlockZ() + r; z++) {
                     var b = l.getWorld().getBlockAt(x, y, z);
                     range += lookupValue(b.getType());
                 }

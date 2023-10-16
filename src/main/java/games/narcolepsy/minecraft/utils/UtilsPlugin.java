@@ -10,15 +10,15 @@ import games.narcolepsy.minecraft.utils.features.customportals.CustomPortals;
 import games.narcolepsy.minecraft.utils.features.disableendermangriefing.DisableEndermanGriefing;
 import games.narcolepsy.minecraft.utils.features.discord.Discord;
 import games.narcolepsy.minecraft.utils.features.healthtrack.HealthTrack;
+import games.narcolepsy.minecraft.utils.features.launchcontrol.LaunchControl;
 import games.narcolepsy.minecraft.utils.features.mappoiserver.MapPOIServer;
 import games.narcolepsy.minecraft.utils.features.mapurl.MapURL;
-import games.narcolepsy.minecraft.utils.features.reownonname.ReownOnName;
-import games.narcolepsy.minecraft.utils.features.serverlist.ServerList;
-import games.narcolepsy.minecraft.utils.features.launchcontrol.LaunchControl;
 import games.narcolepsy.minecraft.utils.features.nodefaultpermissions.NoDefaultPermissions;
 import games.narcolepsy.minecraft.utils.features.placelightingonleaves.PlaceLightingOnLeaves;
 import games.narcolepsy.minecraft.utils.features.playerhead.PlayerHead;
 import games.narcolepsy.minecraft.utils.features.playerlist.PlayerList;
+import games.narcolepsy.minecraft.utils.features.reownonname.ReownOnName;
+import games.narcolepsy.minecraft.utils.features.serverlist.ServerList;
 import games.narcolepsy.minecraft.utils.features.sit.Sit;
 import games.narcolepsy.minecraft.utils.features.unloadspawnchunks.UnloadSpawnChunks;
 import games.narcolepsy.minecraft.utils.features.villagerheal.VillagerHeal;
@@ -29,6 +29,9 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
 public final class UtilsPlugin extends JavaPlugin {
@@ -42,142 +45,87 @@ public final class UtilsPlugin extends JavaPlugin {
         /* Save out default configuration, if a config does not exist. */
         saveDefaultConfig();
 
-        /* Load configuration. */
-        ConfigurationSection cfg = getConfig();
+        configFeature("no-default-permissions", (cfg) -> new NoDefaultPermissions(this));
+        configFeature("reown-on-name", (cfg) -> new ReownOnName(this));
+        configFeature("mapurl", (cfg) -> new MapURL(this));
+        configFeature("health-track", (cfg) -> new HealthTrack(this));
+        configFeature("villager-heal", (cfg) -> new VillagerHeal(this));
+        configFeature("unload-spawn-chunks", (cfg) -> new UnloadSpawnChunks(this));
+        configFeature("sit", (cfg) -> new Sit(this));
+        configFeature("texthud", (cfg) -> new TextHUD(this));
+        configFeature("player-head", (cfg) -> new PlayerHead(this));
+        configFeature("custom-portals", (cfg) -> new CustomPortals(this));
+        configFeature("place-lighting-on-leaves", (cfg) -> new PlaceLightingOnLeaves(this));
+        configFeature("boat-names", (cfg) -> new BoatNames(this));
+        configFeature("chat", (cfg) -> new Chat(this));
+        configFeature("player-list", (cfg) -> new PlayerList(this));
+        configFeature("disable-enderman-griefing", (cfg) -> new DisableEndermanGriefing(this));
 
-        if (cfg.getBoolean("features.no-default-permissions", false)) {
-            addFeature(new NoDefaultPermissions(this));
-        }
+        configFeature("map-poi-server", (cfg) -> {
+            var port = cfg.getInt("port", 8080);
+            var bindAddress = cfg.getString("bindAddress", "localhost");
 
-        if (cfg.getBoolean("features.reown-on-name", true)) {
-            addFeature(new ReownOnName(this));
-        }
+            return new MapPOIServer(this, port, bindAddress);
+        });
 
-        if (cfg.getBoolean("features.mapurl", true)) {
-            addFeature(new MapURL(this));
-        }
+        configFeature("launch-control", (cfg) -> {
+            var year = cfg.getInt("launch-at.year");
+            var month = cfg.getInt("launch-at.month");
+            var day = cfg.getInt("launch-at.day");
+            var hour = cfg.getInt("launch-at.hour");
+            var minute = cfg.getInt("launch-at.minute");
 
-        if (cfg.getBoolean("features.healthtrack", true)) {
-            addFeature(new HealthTrack(this));
-        }
+            LocalDateTime launchAt = LocalDateTime.of(year, month, day, hour, minute);
+            return new LaunchControl(this, launchAt);
+        });
 
-        if (cfg.getBoolean("features.villagerheal", true)) {
-            addFeature(new VillagerHeal(this));
-        }
+        configFeature("auto-restart", (cfg) -> {
+            var restartAfter = cfg.getInt("restart-after", 4 * 3600);
+            var forceRestartAfter = cfg.getInt("eager-time", 3600);
 
-        if (cfg.isConfigurationSection("features.mappoiserver")) {
-            ConfigurationSection lcCfg = cfg.getConfigurationSection("features.mappoiserver");
+            return new AutoRestart(this, restartAfter, forceRestartAfter);
+        });
 
-            if (lcCfg.getBoolean("enabled", true)) {
-                int port = lcCfg.getInt("port", 8080);
-                String bindAddress = lcCfg.getString("bindAddress", "localhost");
-                addFeature(new MapPOIServer(this, port, bindAddress));
-            }
-        }
+        configFeature("server-list", (cfg) -> {
+            var hidePlayers = cfg.getBoolean("hide-players", true);
+            return new ServerList(this, hidePlayers);
+        });
 
-        if (cfg.isConfigurationSection("features.launch-control")) {
-            ConfigurationSection lcCfg = cfg.getConfigurationSection("features.launch-control");
+        configFeature("discord", (cfg) -> {
+            var messages = cfg.getStringList("message-types");
+            return new Discord(this, messages);
+        });
 
-            if (lcCfg.getBoolean("enabled", false)) {
-                int year = lcCfg.getInt("launch-at.year");
-                int month = lcCfg.getInt("launch-at.month");
-                int day = lcCfg.getInt("launch-at.day");
-                int hour = lcCfg.getInt("launch-at.hour");
-                int minute = lcCfg.getInt("launch-at.minute");
+        configFeature("better-beacons", (cfg) -> {
+            var iron = cfg.getDouble("values.iron", 0.5);
+            var gold = cfg.getDouble("values.gold", 0.75);
+            var emerald = cfg.getDouble("values.emerald", 1.25);
+            var diamond = cfg.getDouble("values.diamond", 1.75);
+            var netherite = cfg.getDouble("values.netherite", 2.5);
 
-                LocalDateTime launchAt = LocalDateTime.of(year, month, day, hour, minute);
+            var respectVanillaMinimums = cfg.getBoolean("respect-vanilla-minimums", true);
+            var limitToLoadDistance = cfg.getBoolean("limit-to-view-distance", true);
 
-                addFeature(new LaunchControl(this, launchAt));
-            }
-        }
+            var maxDistance = (limitToLoadDistance ? this.getServer().getViewDistance() : Double.MAX_VALUE);
 
-        if (cfg.getBoolean("features.unload-spawn-chunks", false)) {
-            addFeature(new UnloadSpawnChunks(this));
-        }
-
-        if (cfg.isConfigurationSection("features.auto-restart")) {
-            ConfigurationSection lcCfg = cfg.getConfigurationSection("features.auto-restart");
-
-            if (lcCfg.getBoolean("enabled", false)) {
-                int restartAfter = lcCfg.getInt("restart-after", 4 * 3600);
-                int forceRestartAfter = lcCfg.getInt("eager-time", 3600);
-
-                addFeature(new AutoRestart(this, restartAfter, forceRestartAfter));
-            }
-        }
-
-        if (cfg.getBoolean("features.sit", true)) {
-            addFeature(new Sit(this));
-        }
-
-        if (cfg.getBoolean("features.compasshud", true)) {
-            addFeature(new TextHUD(this));
-        }
-
-        if (cfg.getBoolean("features.playerhead", true)) {
-            addFeature(new PlayerHead(this));
-        }
-
-        if (cfg.getBoolean("features.custom-portals", true)) {
-            addFeature(new CustomPortals(this));
-        }
-
-        if (cfg.isConfigurationSection("features.server-list")) {
-            ConfigurationSection slCfg = cfg.getConfigurationSection("features.server-list");
-            boolean hidePlayers = slCfg.getBoolean("hide-players", true);
-            addFeature(new ServerList(this, hidePlayers));
-        }
-
-        if (cfg.getBoolean("features.place-lighting-on-leaves", true)) {
-            addFeature(new PlaceLightingOnLeaves(this));
-        }
-
-        if (cfg.getBoolean("features.boat-names", true)) {
-            addFeature(new BoatNames(this));
-        }
-
-        if (cfg.isConfigurationSection("features.discord")) {
-            ConfigurationSection dCfg = cfg.getConfigurationSection("features.discord");
-            assert dCfg != null;
-            List<String> messages = dCfg.getStringList("message-types");
-            addFeature(new Discord(this, messages));
-        }
-
-        if (cfg.getBoolean("features.chat", true)) {
-            addFeature(new Chat(this));
-        }
-
-        if (cfg.getBoolean("features.serverlist", true)) {
-            addFeature(new PlayerList(this));
-        }
-
-        if (cfg.getBoolean("features.disableendermangriefing", true)) {
-            addFeature(new DisableEndermanGriefing(this));
-        }
-
-        if (cfg.isConfigurationSection("features.better-beacons")) {
-            ConfigurationSection bCfg = cfg.getConfigurationSection("features.better-beacons");
-            assert bCfg != null;
-
-            if (bCfg.getBoolean("enabled", false)) {
-                double iron = bCfg.getDouble("iron-value", 0.5);
-                double gold = bCfg.getDouble("gold-value", 0.75);
-                double emerald = bCfg.getDouble("emerald-value", 1.25);
-                double diamond = bCfg.getDouble("diamond-value", 1.75);
-                double netherite = bCfg.getDouble("netherite-value", 2.5);
-
-                boolean respectVanillaMinimums = bCfg.getBoolean("respect-vanilla-minimums", true);
-                boolean limitToLoadDistance = bCfg.getBoolean("limit-to-load-distance", true);
-
-                double maxDistance = (limitToLoadDistance ? this.getServer().getViewDistance() : Double.MAX_VALUE);
-
-                addFeature(new BetterBeacons(this, iron, gold, emerald, diamond, netherite, respectVanillaMinimums, maxDistance));
-            }
-        }
+            return new BetterBeacons(this, iron, gold, emerald, diamond, netherite, respectVanillaMinimums, maxDistance);
+        });
 
         for (Feature f : features) {
             l.info("Enabling: " + f.getName());
             f.Enable();
+        }
+    }
+
+    private void configFeature(String name, Function<ConfigurationSection, Feature> callback) {
+        var globalCfg = getConfig();
+        var cfgSectionName = String.format("features.%s", name);
+        var featureCfg = globalCfg.getConfigurationSection(cfgSectionName);
+
+        if (featureCfg != null) {
+            if (featureCfg.getBoolean("enabled", false)) {
+                addFeature(callback.apply(featureCfg));
+            }
         }
     }
 

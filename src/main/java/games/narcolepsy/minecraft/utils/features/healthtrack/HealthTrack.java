@@ -18,17 +18,17 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class HealthTrack extends BaseFeature implements Listener {
     private final Map<UUID, DamageTrackingState> playerState = new HashMap<>();
+
     public HealthTrack(Plugin plugin) {
         super(plugin);
-    }
-
-    @Override
-    public void Enable() {
-        this.server.getPluginManager().registerEvents(this, this.plugin);
     }
 
     @Override

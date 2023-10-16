@@ -1,4 +1,4 @@
-package games.narcolepsy.minecraft.utils;
+package games.narcolepsy.minecraft.utils.features.sit;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -7,13 +7,21 @@ import org.bukkit.World;
  * Reference to a block which equality can be checked based on the integer coordinates.
  */
 public class BlockReference {
-    /** World. */
+    /**
+     * World.
+     */
     public World world;
-    /** X position. */
+    /**
+     * X position.
+     */
     public int x;
-    /** Y position. */
+    /**
+     * Y position.
+     */
     public int y;
-    /** Z position */
+    /**
+     * Z position
+     */
     public int z;
 
     /**

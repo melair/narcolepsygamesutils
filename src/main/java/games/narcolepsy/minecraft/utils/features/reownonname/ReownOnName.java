@@ -15,11 +15,6 @@ public class ReownOnName extends BaseFeature implements Listener {
     }
 
     @Override
-    public void Enable() {
-        this.server.getPluginManager().registerEvents(this, this.plugin);
-    }
-
-    @Override
     public String getName() {
         return "Reown On Name";
     }

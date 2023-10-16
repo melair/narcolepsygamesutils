@@ -10,7 +10,11 @@ import io.undertow.server.RoutingHandler;
 import io.undertow.util.Headers;
 import org.bukkit.plugin.Plugin;
 
-import java.util.*;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 

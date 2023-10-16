@@ -110,7 +110,7 @@ public class MapURL extends BaseFeature implements @Nullable CommandExecutor {
         this.server.getScheduler().runTask(this.plugin, () -> {
             var newPlayer = this.server.getPlayer(p.getUniqueId());
 
-            if (newPlayer == null)  {
+            if (newPlayer == null) {
                 return;
             }
 

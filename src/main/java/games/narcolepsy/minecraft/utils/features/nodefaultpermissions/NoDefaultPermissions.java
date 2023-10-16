@@ -2,14 +2,12 @@ package games.narcolepsy.minecraft.utils.features.nodefaultpermissions;
 
 import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import games.narcolepsy.minecraft.utils.features.Feature;
-import org.bukkit.Server;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class NoDefaultPermissions extends BaseFeature implements Feature {
 

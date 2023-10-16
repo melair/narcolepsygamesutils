@@ -1,11 +1,8 @@
 package games.narcolepsy.minecraft.utils.features.sit;
 
-import games.narcolepsy.minecraft.utils.BlockReference;
 import games.narcolepsy.minecraft.utils.features.BaseFeature;
-import games.narcolepsy.minecraft.utils.features.Feature;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -27,8 +24,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +35,7 @@ import java.util.UUID;
 
 public class Sit extends BaseFeature implements Listener, @Nullable CommandExecutor {
     private final JavaPlugin javaPlugin;
+
     public Sit(JavaPlugin plugin) {
         super(plugin);
         this.javaPlugin = plugin;
@@ -47,7 +43,7 @@ public class Sit extends BaseFeature implements Listener, @Nullable CommandExecu
 
     @Override
     public void Enable() {
-        this.server.getPluginManager().registerEvents(this, plugin);
+        super.Enable();
         javaPlugin.getCommand("sit").setExecutor(this);
     }
 
@@ -56,7 +52,9 @@ public class Sit extends BaseFeature implements Listener, @Nullable CommandExecu
         return "Sit";
     }
 
-    /** UUIDs of sit entities. */
+    /**
+     * UUIDs of sit entities.
+     */
     private final Map<UUID, BlockReference> chairEntities = new HashMap<>();
 
     /**
@@ -128,7 +126,7 @@ public class Sit extends BaseFeature implements Listener, @Nullable CommandExecu
     /**
      * Add a new sit, mount the player
      *
-     * @param block block to sit on
+     * @param block  block to sit on
      * @param player player to mount
      */
     private void sitInChair(Block block, Player player) {
@@ -171,7 +169,7 @@ public class Sit extends BaseFeature implements Listener, @Nullable CommandExecu
     /**
      * Add a new sit entity vehicle.
      *
-     * @param player player sitting
+     * @param player   player sitting
      * @param location location to sit
      */
     private void addMountPoint(Player player, Location location) {

@@ -1,13 +1,10 @@
 package games.narcolepsy.minecraft.utils.features.placelightingonleaves;
 
 import games.narcolepsy.minecraft.utils.features.BaseFeature;
-import games.narcolepsy.minecraft.utils.features.Feature;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Bell;
 import org.bukkit.block.data.type.Lantern;
@@ -16,17 +13,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class PlaceLightingOnLeaves extends BaseFeature implements Listener {
 
     public PlaceLightingOnLeaves(Plugin plugin) {
         super(plugin);
-    }
-
-    @Override
-    public void Enable() {
-        this.server.getPluginManager().registerEvents(this, this.plugin);
     }
 
     @Override

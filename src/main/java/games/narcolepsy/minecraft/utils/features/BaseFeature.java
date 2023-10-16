@@ -5,11 +5,10 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.logging.Logger;
 
-public abstract class BaseFeature  implements Feature {
+public abstract class BaseFeature implements Feature {
     protected final Plugin plugin;
     protected final Server server;
     protected final Logger logger;
@@ -22,5 +21,12 @@ public abstract class BaseFeature  implements Feature {
 
     protected Component prefix(Component c) {
         return Component.text("(").color(NamedTextColor.GRAY).append(Component.text("\uD83D\uDCA4").color(NamedTextColor.WHITE)).append(Component.text(") ").color(NamedTextColor.GRAY)).append(c);
+    }
+
+    @Override
+    public void Enable() {
+        if (this instanceof Listener listener) {
+            this.server.getPluginManager().registerEvents(listener, this.plugin);
+        }
     }
 }
