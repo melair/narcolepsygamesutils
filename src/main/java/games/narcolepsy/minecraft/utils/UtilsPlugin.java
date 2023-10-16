@@ -106,7 +106,7 @@ public final class UtilsPlugin extends JavaPlugin {
             var respectVanillaMinimums = cfg.getBoolean("respect-vanilla-minimums", true);
             var limitToLoadDistance = cfg.getBoolean("limit-to-view-distance", true);
 
-            var maxDistance = (limitToLoadDistance ? this.getServer().getViewDistance() : Double.MAX_VALUE);
+            var maxDistance = (limitToLoadDistance ? this.getServer().getViewDistance() * 16 : Double.MAX_VALUE);
 
             return new BetterBeacons(this, iron, gold, emerald, diamond, netherite, respectVanillaMinimums, maxDistance);
         });

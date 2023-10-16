@@ -2,8 +2,11 @@ package games.narcolepsy.minecraft.utils.features.betterbeacons;
 
 import games.narcolepsy.minecraft.utils.features.BaseFeature;
 import io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Beacon;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -36,9 +39,15 @@ public class BetterBeacons extends BaseFeature implements Listener {
 
     @EventHandler
     public void onPlayerChangeBeaconEffectEvent(PlayerChangeBeaconEffectEvent e) {
-        if (e.getBeacon() instanceof Beacon b) {
+        if (e.getBeacon().getState() instanceof Beacon b) {
             var range = calculateBeaconRange(b.getLocation(), b.getTier());
             b.setEffectRange(range);
+            b.update();
+
+            if (range == this.maximumRange) {
+                e.getPlayer().sendMessage(prefix(Component.text("The beacon hums and you get the impression it's at maximum range.").color(NamedTextColor.RED)));
+                e.getPlayer().getWorld().playSound(e.getBeacon().getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, (float) 1.0, (float) 1.0);
+            }
         }
     }
 
