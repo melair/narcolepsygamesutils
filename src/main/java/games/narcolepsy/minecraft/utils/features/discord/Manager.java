@@ -18,14 +18,13 @@ public class Manager implements Runnable {
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private final BlockingQueue<Embedder> eventQueue = new LinkedBlockingQueue<>();
     private final String webhookURL;
-    private final OkHttpClient client;
+    private final OkHttpClient client = new OkHttpClient();
     private final Logger logger;
     private final Gson gson = new Gson();
 
     public Manager(Logger logger, String webhookURL) {
         this.logger = logger;
         this.webhookURL = webhookURL;
-        this.client = new OkHttpClient();
     }
 
     public void queue(Embedder e) {
